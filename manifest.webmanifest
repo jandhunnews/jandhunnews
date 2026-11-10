@@ -1,0 +1,15 @@
+{
+  "id": "https://jandhunnews.github.io/",
+  "name": "जनधुन न्यूज़",
+  "short_name": "जनधुन",
+  "description": "सच की आवाज़, सबके लिए",
+  "lang": "hi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f7f9",
+  "theme_color": "#c8102e",
+  "icons": [
+    { "src": "logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
