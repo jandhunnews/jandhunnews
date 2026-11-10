@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#c8102e" />
+  <meta name="description" content="जनधुन न्यूज़ न्यूज़रूम — लेख और संपादकीय वर्कफ़्लो डेमो" />
+  <title>न्यूज़रूम सीएमएस | जनधुन न्यूज़</title>
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="cms.css" />
+</head>
+<body>
+  <header class="cms-header">
+    <a class="cms-brand" href="index.html"><img src="logo.svg" alt="जनधुन न्यूज़" /><span>न्यूज़रूम</span></a>
+    <a class="back-link" href="index.html">← वेबसाइट पर वापस</a>
+  </header>
+  <main class="cms-wrap">
+    <section class="welcome-row">
+      <div><p class="eyebrow">जनधुन न्यूज़ · कंटेंट डेस्क</p><h1>न्यूज़रूम डैशबोर्ड</h1><p class="subhead">खबर लिखें, समीक्षा करें और प्रकाशन की स्थिति संभालें।</p></div>
+      <label class="role-picker">डेमो भूमिका<select id="cmsRole"><option value="super-admin">सुपर एडमिन</option><option value="chief-editor">मुख्य संपादक</option><option value="news-editor">समाचार संपादक</option><option value="reporter">न्यूज़ रिपोर्टर</option><option value="writer">लेखक</option><option value="guest">योगदानकर्ता / अतिथि</option><option value="subscriber">सब्सक्राइबर / पाठक</option></select></label>
+    </section>
+    <aside class="demo-warning"><strong>डेमो मोड:</strong> यह पैनल केवल इसी ब्राउज़र में नमूना डेटा सहेजता है। भूमिका चुनना वास्तविक लॉगिन नहीं है और सर्वर पर अधिकार लागू नहीं करता। लाइव वेबसाइट पर इस्तेमाल से पहले सुरक्षित बैकएंड, पहचान सत्यापन और सर्वर-साइड अनुमति जाँच जोड़ें।</aside>
+    <section class="stats" aria-label="खबरों का सार"><article><span>कुल खबरें</span><strong id="statTotal">0</strong></article><article><span>समीक्षा बाकी</span><strong id="statReview">0</strong></article><article><span>प्रकाशित</span><strong id="statPublished">0</strong></article><article><span>मेरे ड्राफ़्ट</span><strong id="statDraft">0</strong></article></section>
+    <section class="workspace">
+      <section class="panel editor-panel" id="editorPanel"><div class="panel-title"><div><p class="eyebrow">कंटेंट बनाएं</p><h2 id="formTitle">नई खबर लिखें</h2></div></div>
+        <form id="articleForm">
+          <input type="hidden" id="articleId" />
+          <label>खबर की हेडलाइन<input id="headline" maxlength="140" required placeholder="खबर का साफ़ और सटीक शीर्षक लिखें" /></label>
+          <div class="field-row"><label>श्रेणी<select id="category" required><option>देश</option><option>दुनिया</option><option>कारोबार</option><option>खेल</option><option>टेक्नोलॉजी</option><option>मनोरंजन</option></select></label><label>तस्वीर का लिंक (वैकल्पिक)<input id="imageUrl" type="url" placeholder="https://..." /></label></div>
+          <label>संक्षिप्त विवरण<textarea id="summary" rows="3" maxlength="300" required placeholder="खबर का छोटा परिचय"></textarea></label>
+          <label>पूरी खबर<textarea id="bodyText" rows="7" required placeholder="तथ्यों और स्रोतों के साथ खबर लिखें..."></textarea></label>
+          <p id="formHint" class="form-hint">ड्राफ़्ट सेव करें या संपादक को समीक्षा के लिए भेजें।</p>
+          <div class="form-actions"><button class="button muted" type="button" id="resetForm">साफ़ करें</button><button class="button outline" type="button" id="saveDraft">ड्राफ़्ट सेव करें</button><button class="button primary" type="submit" id="submitArticle">समीक्षा के लिए भेजें</button></div>
+        </form>
+      </section>
+      <section class="panel articles-panel"><div class="list-heading"><div><p class="eyebrow">संपादकीय सूची</p><h2>खबरें</h2></div><label class="filter-label">स्थिति<select id="statusFilter"><option value="all">सभी खबरें</option><option value="draft">ड्राफ़्ट</option><option value="review">समीक्षा बाकी</option><option value="published">प्रकाशित</option><option value="rejected">वापस भेजी</option></select></label></div><div id="articlesList" class="articles-list" aria-live="polite"></div></section>
+    </section>
+    <section class="permission-note panel"><h2>भूमिका के अनुसार काम</h2><div class="permission-grid"><p><strong>सुपर एडमिन:</strong> खबरें और डेमो सेटिंग प्रबंधित करें।</p><p><strong>मुख्य संपादक:</strong> समीक्षा, वापसी और प्रकाशन।</p><p><strong>समाचार संपादक:</strong> समीक्षा करें और संपादकीय सुझाव दें।</p><p><strong>रिपोर्टर / लेखक:</strong> ड्राफ़्ट बनाएं और समीक्षा के लिए भेजें।</p><p><strong>योगदानकर्ता:</strong> सीमित ड्राफ़्ट सेव करें।</p><p><strong>पाठक:</strong> सीएमएस लेखन सुविधाएं उपलब्ध नहीं।</p></div></section>
+  </main>
+  <script src="cms.js"></script>
+</body>
+</html>
