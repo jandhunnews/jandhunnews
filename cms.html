@@ -18,17 +18,18 @@
     <a class="back-link" href="index.html">← वेबसाइट पर वापस</a>
   </header>
   <main class="cms-wrap">
-    <section id="setupNotice" class="demo-warning" hidden><strong>सेटअप बाकी है:</strong> Supabase project URL और publishable anon key को <code>supabase-config.js</code> में भरें, फिर <code>supabase/schema.sql</code> को Supabase SQL Editor में चलाएं। सेटअप निर्देश <code>README-auth.md</code> में हैं।</section>
+    <section id="setupNotice" class="demo-warning" hidden><strong>सेटअप बाकी है:</strong> Supabase project URL और public publishable/anon key को <code>supabase-config.js</code> में भरें, फिर <code>supabase/schema.sql</code> चलाएं। पहले एडमिन रोल के निर्देश <code>README-auth.md</code> में हैं।</section>
     <section id="loginView" class="auth-card">
       <img src="logo.svg" alt="जनधुन न्यूज़" class="auth-logo" />
-      <p class="eyebrow">सुरक्षित न्यूज़रूम</p><h1>अपने खाते में लॉगिन करें</h1>
-      <p class="subhead">आपका रोल टीम एडमिन द्वारा दिया जाता है। लॉगिन पेज पर भूमिका चुनने की ज़रूरत नहीं।</p>
-      <form id="loginForm" class="auth-form"><label>ईमेल<input id="email" type="email" autocomplete="username" required placeholder="name@example.com" /></label><label>पासवर्ड<input id="password" type="password" autocomplete="current-password" required minlength="8" placeholder="कम से कम 8 अक्षर" /></label><button class="button primary" type="submit">सुरक्षित लॉगिन</button><button class="text-button" type="button" id="resetPassword">पासवर्ड भूल गए?</button><p id="authMessage" class="form-hint" role="status" aria-live="polite"></p></form>
-      <p class="security-note">खाता नहीं है? न्यूज़रूम एडमिन से आमंत्रण लें। सार्वजनिक साइन-अप बंद है।</p>
+      <p class="eyebrow">पासवर्ड + ऑथेंटिकेटर OTP</p><h1>सुरक्षित न्यूज़रूम लॉगिन</h1>
+      <p class="subhead">हर नए लॉगिन पर पासवर्ड और आपके ऑथेंटिकेटर ऐप का ताज़ा 6-अंकों का कोड ज़रूरी है। आपका रोल एडमिन तय करता है।</p>
+      <form id="loginForm" class="auth-form"><label>ईमेल<input id="email" type="email" autocomplete="username" required placeholder="jandhunnews@gmail.com" /></label><label>पासवर्ड<input id="password" type="password" autocomplete="current-password" required minlength="8" placeholder="अपना पासवर्ड" /></label><button class="button primary" type="submit">पासवर्ड से आगे बढ़ें</button><button class="text-button" type="button" id="resetPassword">पासवर्ड भूल गए?</button><p id="authMessage" class="form-hint" role="status" aria-live="polite"></p></form>
+      <section id="mfaPanel" class="mfa-panel" hidden><h2 id="mfaTitle">दो-स्तरीय सत्यापन</h2><p id="mfaInstructions" class="subhead"></p><img id="mfaQr" class="mfa-qr" alt="ऑथेंटिकेटर ऐप में स्कैन करने के लिए MFA QR कोड" hidden /><p id="mfaSecretWrap" class="mfa-secret-wrap" hidden>QR स्कैन नहीं हो रहा? Secret key: <code id="mfaSecret"></code></p><form id="mfaForm" class="auth-form"><label>ऑथेंटिकेटर ऐप का 6-अंकों का कोड<input id="mfaCode" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required placeholder="123456" /></label><button class="button primary" id="verifyMfa" type="submit">कोड सत्यापित करें</button><button class="text-button" id="cancelMfa" type="button">लॉगिन रद्द करें</button></form></section>
+      <p class="security-note">खाता नहीं है? न्यूज़रूम एडमिन से आमंत्रण लें। सार्वजनिक साइन-अप बंद है। OTP ईमेल नहीं, authenticator ऐप (जैसे Google Authenticator या Microsoft Authenticator) से आएगा।</p>
     </section>
     <section id="appView" hidden>
       <section class="welcome-row"><div><p class="eyebrow">जनधुन न्यूज़ · कंटेंट डेस्क</p><h1>न्यूज़रूम डैशबोर्ड</h1><p class="subhead" id="userSummary"></p></div><button class="button muted" id="logoutButton" type="button">लॉगआउट</button></section>
-      <aside class="security-note">लेखों और भूमिका के अधिकार सर्वर पर जाँचे जाते हैं। वेबसाइट का यह CMS Supabase Auth और Row Level Security का उपयोग करता है।</aside>
+      <aside class="security-note">लेखों और भूमिका के अधिकार सर्वर पर जाँचे जाते हैं। हर लॉगिन में MFA सत्यापन आवश्यक है।</aside>
       <section class="stats" aria-label="खबरों का सार"><article><span>कुल दिखाई देने वाली खबरें</span><strong id="statTotal">0</strong></article><article><span>समीक्षा बाकी</span><strong id="statReview">0</strong></article><article><span>प्रकाशित</span><strong id="statPublished">0</strong></article><article><span>मेरे ड्राफ़्ट</span><strong id="statDraft">0</strong></article></section>
       <section class="workspace">
         <section class="panel editor-panel" id="editorPanel"><div class="panel-title"><div><p class="eyebrow">कंटेंट बनाएं</p><h2 id="formTitle">नई खबर लिखें</h2></div></div>
