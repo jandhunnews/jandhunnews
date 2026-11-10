@@ -1,0 +1,88 @@
+/* Hindi typography, Jan Dhun branding and logo presentation */
+body {
+  font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+}
+
+.top-logo {
+  display: flex;
+  align-items: center;
+  flex: 0 0 158px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 4px 9px;
+}
+
+.top-logo img {
+  width: 140px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.masthead .brand-group h1 {
+  letter-spacing: -0.035em;
+  line-height: 1.22;
+}
+
+.brand-group p,
+.story-content h4,
+.editor-pick h4,
+.trending-list li,
+.role-card h4,
+tbody td,
+label,
+input,
+select,
+textarea,
+.paper-meta li {
+  line-height: 1.8;
+}
+
+.paper-cover img {
+  width: 235px;
+  margin-bottom: 12px;
+}
+
+.demo-note {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 14px 0 0;
+}
+
+.site-footer {
+  background: #0c0c0c;
+  color: #fff;
+  padding: 18px 0;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  font-size: 0.85rem;
+}
+
+.footer-inner img {
+  width: 132px;
+  padding: 4px 8px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.secondary-btn {
+  background: #263247;
+}
+
+@media (max-width: 680px) {
+  .top-logo {
+    flex-basis: 145px;
+  }
+  .top-logo img {
+    width: 128px;
+    height: 42px;
+  }
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}

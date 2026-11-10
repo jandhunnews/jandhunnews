@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" role="img" aria-labelledby="title desc">
+  <title id="title">Jan Dhun News</title>
+  <desc id="desc">Jan Dhun News wordmark in red and navy, with orange broadcast waves.</desc>
+  <rect width="640" height="300" rx="8" fill="#fff"/>
+  <text x="44" y="150" fill="#c8102e" font-family="Arial, Helvetica, sans-serif" font-size="123" font-weight="800" letter-spacing="-8">JanDhun</text>
+  <text x="158" y="248" fill="#0b1d49" font-family="Arial, Helvetica, sans-serif" font-size="96" font-weight="900" letter-spacing="-2">NEWS</text>
+  <g fill="none" stroke="#ed7b19" stroke-width="12" stroke-linecap="round">
+    <path d="M542 192a18 18 0 0 1 0 35"/>
+    <path d="M558 179a38 38 0 0 1 0 61"/>
+    <path d="M574 166a58 58 0 0 1 0 87"/>
+  </g>
+</svg>

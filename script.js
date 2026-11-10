@@ -4,58 +4,15 @@ const joinForm = document.getElementById('joinForm');
 const dashboard = document.getElementById('userDashboard');
 const permissionList = document.getElementById('permissionList');
 
-// Front-end demo only. Role selection here is not authentication or authorization.
-// A production CMS must verify credentials and enforce permissions on a trusted server.
+// यह केवल फ्रंट-एंड डेमो है। वास्तविक लॉगिन और भूमिका-अधिकार सर्वर पर लागू करें।
 const roles = {
-  'super-admin': {
-    name: 'Super Admin',
-    level: 'Complete Access',
-    pending: '8',
-    published: '24',
-    permissions: ['Manage website settings, team members, ads, plugins, and layouts.', 'Manage and publish all content.']
-  },
-  'chief-editor': {
-    name: 'Chief Editor',
-    level: 'Editorial Control',
-    pending: '12',
-    published: '18',
-    permissions: ['Review, edit, reject, schedule, and publish stories.', 'Oversee editorial workflow and newsroom priorities.']
-  },
-  'news-editor': {
-    name: 'News Editor',
-    level: 'Content Management',
-    pending: '15',
-    published: '13',
-    permissions: ['Manage story assignments and the editorial queue.', 'Review submissions and prepare stories for publication.']
-  },
-  reporter: {
-    name: 'News Reporter',
-    level: 'Reporter Console',
-    pending: '10',
-    published: '9',
-    permissions: ['Create and save news drafts, upload media, and submit stories for review.', 'Track the status of submitted stories.']
-  },
-  writer: {
-    name: 'Author / Writer',
-    level: 'Draft & Submit',
-    pending: '6',
-    published: '4',
-    permissions: ['Write drafts, upload images, and submit work for review.', 'Cannot publish directly.']
-  },
-  guest: {
-    name: 'Contributor / Guest',
-    level: 'Restricted Draft',
-    pending: '4',
-    published: '2',
-    permissions: ['Create and save restricted drafts for an assigned editor.', 'Cannot publish directly.']
-  },
-  subscriber: {
-    name: 'Subscriber / Reader',
-    level: 'Front-end Login',
-    pending: '0',
-    published: '0',
-    permissions: ['Read subscriber content, comment, and manage newsletter preferences.', 'No CMS publishing access.']
-  }
+  'super-admin': { name: 'सुपर एडमिन', level: 'पूरा नियंत्रण', pending: '8', published: '24', permissions: ['वेबसाइट सेटिंग, टीम, विज्ञापन, प्लगइन और लेआउट प्रबंधित करें।', 'सभी सामग्री का प्रबंधन और प्रकाशन करें।'] },
+  'chief-editor': { name: 'मुख्य संपादक', level: 'संपादकीय नियंत्रण', pending: '12', published: '18', permissions: ['सभी लेख पढ़ें, संपादित करें, अस्वीकारें, शेड्यूल या प्रकाशित करें।', 'न्यूज़रूम की प्राथमिकताओं और संपादकीय प्रक्रिया की निगरानी करें।'] },
+  'news-editor': { name: 'समाचार संपादक', level: 'सामग्री प्रबंधन', pending: '15', published: '13', permissions: ['खबरों की सूची और रिपोर्टिंग असाइनमेंट संभालें।', 'समीक्षा करके खबरों को प्रकाशन के लिए तैयार करें।'] },
+  reporter: { name: 'न्यूज़ रिपोर्टर', level: 'रिपोर्टर पैनल', pending: '10', published: '9', permissions: ['खबर लिखें, मीडिया अपलोड करें और समीक्षा के लिए भेजें।', 'अपनी खबरों की स्थिति देखें।'] },
+  writer: { name: 'लेखक', level: 'ड्राफ़्ट और समीक्षा', pending: '6', published: '4', permissions: ['लेख लिखें, तस्वीरें अपलोड करें और समीक्षा के लिए भेजें।', 'सीधे प्रकाशित करने की अनुमति नहीं।'] },
+  guest: { name: 'योगदानकर्ता / अतिथि', level: 'सीमित ड्राफ़्ट', pending: '4', published: '2', permissions: ['सीमित ड्राफ़्ट बनाएं और सुरक्षित करें।', 'सीधे प्रकाशित करने की अनुमति नहीं।'] },
+  subscriber: { name: 'सब्सक्राइबर / पाठक', level: 'पाठक लॉगिन', pending: '0', published: '0', permissions: ['प्रीमियम खबरें पढ़ें, टिप्पणी करें और न्यूज़लेटर संभालें।', 'सीएमएस में प्रकाशन की अनुमति नहीं।'] }
 };
 
 function openLogin() {
@@ -69,49 +26,30 @@ function closeLogin() {
   loginModal.setAttribute('aria-hidden', 'true');
 }
 
-document.querySelectorAll('[data-open-login]').forEach((button) => {
-  button.addEventListener('click', openLogin);
-});
-
-document.querySelectorAll('[data-close-login]').forEach((button) => {
-  button.addEventListener('click', closeLogin);
-});
-
-document.querySelectorAll('[data-open-join]').forEach((button) => {
-  button.addEventListener('click', () => {
-    document.getElementById('join-us').scrollIntoView({ behavior: 'smooth' });
-    document.querySelector('#joinForm input[name="name"]').focus({ preventScroll: true });
-  });
-});
-
+document.querySelectorAll('[data-open-login]').forEach((button) => button.addEventListener('click', openLogin));
+document.querySelectorAll('[data-close-login]').forEach((button) => button.addEventListener('click', closeLogin));
+document.querySelectorAll('[data-open-join]').forEach((button) => button.addEventListener('click', () => {
+  document.getElementById('join-us').scrollIntoView({ behavior: 'smooth' });
+  document.querySelector('#joinForm input[name="name"]').focus({ preventScroll: true });
+}));
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && loginModal.classList.contains('open')) {
-    closeLogin();
-  }
+  if (event.key === 'Escape' && loginModal.classList.contains('open')) closeLogin();
 });
 
 loginForm.addEventListener('submit', (event) => {
   event.preventDefault();
-  const selectedRole = document.getElementById('loginRole').value;
-  const role = roles[selectedRole];
-
-  if (!role) {
-    window.alert('Please select a valid role.');
-    return;
-  }
-
-  // Demonstration only: this does not check the username/password or grant real access.
+  const role = roles[document.getElementById('loginRole').value];
+  if (!role) return;
   document.getElementById('activeRole').textContent = role.name;
   document.getElementById('accessLevel').textContent = role.level;
   document.getElementById('pendingCount').textContent = role.pending;
   document.getElementById('publishedToday').textContent = role.published;
   permissionList.replaceChildren();
-  role.permissions.forEach((permission) => {
+  role.permissions.forEach((text) => {
     const item = document.createElement('li');
-    item.textContent = permission;
+    item.textContent = text;
     permissionList.appendChild(item);
   });
-
   dashboard.classList.add('visible');
   closeLogin();
   loginForm.reset();
@@ -120,8 +58,8 @@ loginForm.addEventListener('submit', (event) => {
 
 document.getElementById('logoutBtn').addEventListener('click', () => {
   dashboard.classList.remove('visible');
-  document.getElementById('activeRole').textContent = 'Guest';
-  document.getElementById('accessLevel').textContent = '--';
+  document.getElementById('activeRole').textContent = 'पाठक';
+  document.getElementById('accessLevel').textContent = '—';
   document.getElementById('pendingCount').textContent = '0';
   document.getElementById('publishedToday').textContent = '0';
   permissionList.replaceChildren();
@@ -130,12 +68,10 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
 joinForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const name = joinForm.elements.name.value.trim();
-  window.alert(`Thank you, ${name}! Your application has been received in this demo.`);
+  window.alert(`धन्यवाद ${name}! आपका आवेदन इस डेमो में प्राप्त हुआ है।`);
   joinForm.reset();
 });
 
-document.querySelectorAll('.paper-actions button').forEach((button) => {
-  button.addEventListener('click', () => {
-    window.alert('The e-paper edition is a preview. Connect a published PDF or e-paper reader to enable this action.');
-  });
-});
+document.querySelectorAll('.paper-actions button').forEach((button) => button.addEventListener('click', () => {
+  window.alert('ई-पेपर का वास्तविक संस्करण उपलब्ध होने पर यह सुविधा शुरू होगी।');
+}));
