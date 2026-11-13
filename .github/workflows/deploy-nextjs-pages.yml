@@ -1,0 +1,65 @@
+name: Deploy Next.js static site to GitHub Pages
+
+on:
+  pull_request:
+    paths:
+      - "next-site/**"
+      - ".github/workflows/deploy-nextjs-pages.yml"
+  push:
+    branches: [main]
+    paths:
+      - "next-site/**"
+      - ".github/workflows/deploy-nextjs-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: next-site
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Read existing public Supabase configuration
+        run: |
+          URL=$(sed -nE "s/.*url: '([^']+)'.*/\\1/p" ../supabase-config.js | head -n1)
+          KEY=$(sed -nE "s/.*anonKey: '([^']+)'.*/\\1/p" ../supabase-config.js | head -n1)
+          test -n "$URL" && test -n "$KEY"
+          echo "NEXT_PUBLIC_SUPABASE_URL=$URL" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$KEY" >> "$GITHUB_ENV"
+      - name: Build static export
+        run: npm run build
+        env:
+          GITHUB_PAGES: "true"
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: next-site/out
+
+  deploy:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
