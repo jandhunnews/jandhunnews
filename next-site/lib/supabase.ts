@@ -12,5 +12,8 @@ export type NewsArticle = {
   summary: string;
   body: string;
   image_url: string | null;
+  status: "draft" | "review" | "published" | "rejected";
+  author_id: string;
   created_at: string;
+  updated_at: string;
 };
