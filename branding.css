@@ -102,3 +102,45 @@ body { font-family: 'Noto Sans Devanagari', 'Inter', sans-serif; }
   .footer-inner { flex-direction:column; text-align:center; font-size:.78rem; }
 }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
+
+
+/* 2026 editorial refresh — unified premium newsroom theme */
+:root {
+  --bg: #f5f3ef;
+  --panel: #ffffff;
+  --panel-alt: #fbfaf7;
+  --text: #17212b;
+  --muted: #66717d;
+  --line: #e6e1d9;
+  --primary: #b51f32;
+  --primary-dark: #861629;
+  --accent: #14283d;
+  --gold: #c99a45;
+  --shadow: 0 18px 48px rgba(20, 40, 61, .10);
+}
+body { background: var(--bg); color: var(--text); }
+.topbar { background: #12263a; box-shadow: 0 8px 24px rgba(10,25,40,.16); }
+.primary-nav a { font-weight: 600; }
+.primary-nav a:hover { color: #f2c879; }
+.masthead { background: radial-gradient(circle at 82% 15%, rgba(201,154,69,.13), transparent 30%), linear-gradient(135deg,#fff 0%,#f3f0e9 100%); }
+.brand-kicker { background: #f8e9e8; color: var(--primary); }
+.hero-panel { background: linear-gradient(145deg,#14283d 0%,#203b55 58%,#8c2636 140%); border: 1px solid rgba(201,154,69,.25); }
+.ticker-row { background: #172b40; }
+.ticker-label { background: var(--primary); }
+.story-card,.feature-box,.role-card,.join-form,.table-wrap { box-shadow: 0 12px 32px rgba(20,40,61,.055); transition: transform .22s ease, box-shadow .22s ease; }
+.story-card:hover,.role-card:hover { transform: translateY(-4px); box-shadow: 0 18px 38px rgba(20,40,61,.11); }
+.story-tag { background: #f5eee6; color: #7d2633; }
+.split-section { background: #eeece6; }
+.epaper-section { background: linear-gradient(180deg,#fbfaf7,#f0eee8); }
+.paper-preview { background: linear-gradient(145deg,#14283d,#29435b); }
+.site-footer { background: #102338; }
+.mobile-nav { border-top-color: #e4ddd2; }
+.primary-btn { background: linear-gradient(135deg,#bd263a,#8e182d); box-shadow: 0 10px 22px rgba(181,31,50,.20); }
+.primary-btn:hover { box-shadow: 0 14px 28px rgba(181,31,50,.28); }
+.secondary-btn { background: #243c53; }
+input:focus,select:focus,textarea:focus { border-color: rgba(181,31,50,.55); box-shadow: 0 0 0 4px rgba(181,31,50,.08); }
+@media (min-width: 981px) {
+  .primary-nav { gap: 20px; }
+  .masthead { padding: 54px 0 28px; }
+  .content-section { padding: 64px 0; }
+}
