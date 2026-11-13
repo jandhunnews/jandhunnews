@@ -1,12 +1,58 @@
-(function(){
-const cfg=window.JANDHUN_SUPABASE||{},key=(cfg.anonKey||'').trim();
-const valid=key.startsWith('sb_publishable_')||/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(key);
-if(!window.supabase||!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(cfg.url||'')||!valid)return;
-const client=window.supabase.createClient(cfg.url,key,{auth:{persistSession:false,autoRefreshToken:false}});
-const grid=document.querySelector('.news-grid');if(!grid)return;
-const date=v=>v?new Intl.DateTimeFormat('hi-IN',{dateStyle:'medium'}).format(new Date(v)):'';
-client.from('articles').select('id,title,category,summary,image_url,created_at,updated_at').eq('status','published').order('updated_at',{ascending:false}).limit(9).then(({data,error})=>{
-if(error)return;grid.replaceChildren();if(!data||!data.length){const empty=document.createElement('p');empty.className='demo-note';empty.textContent='अभी कोई खबर प्रकाशित नहीं है। न्यूज़रूम CMS से पहली खबर प्रकाशित करें।';grid.append(empty);return}
-data.forEach(a=>{const card=document.createElement('a');card.className='story-card';card.href='article.html?id='+encodeURIComponent(a.id);const media=document.createElement('div');media.className='story-image';if(a.image_url&&/^https:\/\//i.test(a.image_url)){const img=document.createElement('img');img.src=a.image_url;img.alt=a.title;img.loading='lazy';img.style.cssText='width:100%;height:100%;object-fit:cover';media.append(img)}const content=document.createElement('div');content.className='story-content';const tag=document.createElement('span');tag.className='story-tag';tag.textContent=a.category||'खबर';const title=document.createElement('h4');title.textContent=a.title;const summary=document.createElement('p');summary.textContent=a.summary||'';const meta=document.createElement('small');meta.textContent=date(a.created_at);content.append(tag,title,summary,meta);card.append(media,content);grid.append(card)});
-}).catch(()=>{});
+(function () {
+  const config = window.JANDHUN_SUPABASE || {};
+  const key = typeof config.anonKey === 'string' ? config.anonKey.trim() : '';
+  const validKey = key.startsWith('sb_publishable_')
+    || /^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$/.test(key);
+  const configured = window.supabase
+    && /^https:\\/\\/[a-z0-9-]+\\.supabase\\.co$/i.test(config.url || '')
+    && validKey;
+  const grid = document.querySelector('.news-grid');
+  if (!grid) return;
+  const make = (tag, className, value) => {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (value !== undefined) element.textContent = value;
+    return element;
+  };
+  const date = value => value ? new Intl.DateTimeFormat('hi-IN', { dateStyle: 'medium' }).format(new Date(value)) : '';
+  const showMessage = message => grid.replaceChildren(make('div', 'empty-state', message));
+  if (!configured) {
+    showMessage('खबरें अभी उपलब्ध नहीं हैं। न्यूज़रूम डेटाबेस कॉन्फ़िगरेशन जाँचें।');
+    return;
+  }
+  const client = window.supabase.createClient(config.url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  function renderArticle(article, index) {
+    const card = make('a', 'story-card' + (index === 0 ? ' large-story' : ''));
+    card.href = 'article.html?id=' + encodeURIComponent(article.id);
+    const media = make('div', 'story-image');
+    media.setAttribute('aria-hidden', 'true');
+    if (article.image_url && /^https:\\/\\//i.test(article.image_url)) {
+      const image = make('img');
+      image.src = article.image_url;
+      image.alt = '';
+      image.loading = 'lazy';
+      image.decoding = 'async';
+      image.style.cssText = 'width:100%;height:100%;object-fit:cover';
+      media.append(image);
+    }
+    const content = make('div', 'story-content');
+    content.append(make('span', 'story-tag', article.category || 'खबर'));
+    content.append(make('h4', '', article.title));
+    if (article.summary) content.append(make('p', '', article.summary));
+    content.append(make('small', 'story-date', date(article.created_at)));
+    card.append(media, content);
+    return card;
+  }
+  client.from('articles').select('id,title,category,summary,image_url,created_at,updated_at')
+    .eq('status', 'published').order('updated_at', { ascending: false }).limit(9)
+    .then(({ data, error }) => {
+      if (error) return showMessage('खबरें लोड नहीं हो सकीं। कृपया कुछ देर बाद फिर प्रयास करें।');
+      if (!data || !data.length) return showMessage('अभी कोई खबर प्रकाशित नहीं है। न्यूज़रूम CMS से पहली खबर प्रकाशित करें।');
+      grid.replaceChildren(...data.map(renderArticle));
+      const hero = document.querySelector('.hero-featured h2');
+      if (hero) hero.textContent = data[0].title;
+      const ticker = document.querySelector('.ticker-track');
+      if (ticker) ticker.replaceChildren(...data.slice(0, 5).map(item => make('span', '', item.title)));
+    })
+    .catch(() => showMessage('खबरें लोड नहीं हो सकीं। कृपया कुछ देर बाद फिर प्रयास करें।'));
 })();
