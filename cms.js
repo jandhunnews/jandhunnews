@@ -11,6 +11,7 @@ const appView = document.getElementById('appView');
 const authMessage = document.getElementById('authMessage');
 const loginForm = document.getElementById('loginForm');
 const mfaPanel = document.getElementById('mfaPanel');
+const recoveryPanel = document.getElementById('passwordRecoveryPanel');
 let client;
 let sessionUser;
 let profile;
@@ -38,6 +39,7 @@ if (!isConfigured) {
   });
   loginForm.addEventListener('submit', signIn);
   document.getElementById('resetPassword').addEventListener('click', resetPassword);
+  document.getElementById('passwordRecoveryForm').addEventListener('submit', updateRecoveredPassword);
   document.getElementById('cancelMfa').addEventListener('click', cancelMfa);
   document.getElementById('logoutButton').addEventListener('click', signOut);
   document.getElementById('statusFilter').addEventListener('change', renderArticles);
@@ -45,7 +47,12 @@ if (!isConfigured) {
   document.getElementById('saveDraft').addEventListener('click', saveDraft);
   document.getElementById('resetForm').addEventListener('click', clearForm);
   client.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_OUT' || !session) showSignedOut();
+    if (event === 'PASSWORD_RECOVERY') {
+      loginForm.hidden = true;
+      mfaPanel.hidden = true;
+      recoveryPanel.hidden = false;
+      document.getElementById('recoveryMessage').textContent = 'रीसेट लिंक सत्यापित है। नया पासवर्ड सेट करें।';
+    } else if (event === 'SIGNED_OUT' || !session) showSignedOut();
   });
 }
 function showMessage(message, isError = false) {
@@ -144,14 +151,36 @@ async function cancelMfa() {
 async function resetPassword() {
   const email = document.getElementById('email').value.trim();
   if (!email) { showMessage('पहले अपना ईमेल भरें, फिर “पासवर्ड भूल गए?” दबाएं।', true); document.getElementById('email').focus(); return; }
+  const button = document.getElementById('resetPassword'); button.disabled = true;
   try {
     const { error } = await client.auth.resetPasswordForEmail(email,{redirectTo:`${location.origin}${location.pathname}`});
     if (error) throw error;
-    showMessage('यदि इस ईमेल पर खाता है, तो पासवर्ड रीसेट लिंक भेज दिया गया है।');
-  } catch (_) { showMessage('रीसेट ईमेल नहीं भेजा जा सका। एडमिन से संपर्क करें।',true); }
+    showMessage('यदि इस ईमेल पर खाता है, तो पासवर्ड रीसेट लिंक भेज दिया गया है। अपना ईमेल इनबॉक्स और स्पैम फ़ोल्डर देखें।');
+  } catch (_) { showMessage('रीसेट ईमेल नहीं भेजा जा सका। Supabase Auth की Redirect URLs और ईमेल सेटिंग जाँचें।',true); }
+  finally { button.disabled = false; }
+}
+async function updateRecoveredPassword(event) {
+  event.preventDefault();
+  const password = document.getElementById('newPassword').value;
+  const confirm = document.getElementById('confirmNewPassword').value;
+  const message = document.getElementById('recoveryMessage');
+  if (password.length < 10) { message.textContent = 'पासवर्ड कम से कम 10 अक्षरों का होना चाहिए।'; return; }
+  if (password !== confirm) { message.textContent = 'दोनों पासवर्ड मेल नहीं खाते।'; return; }
+  const button = document.querySelector('#passwordRecoveryForm button[type="submit"]'); button.disabled = true;
+  message.textContent = 'पासवर्ड अपडेट हो रहा है…';
+  try {
+    const { error } = await client.auth.updateUser({ password });
+    if (error) throw error;
+    await client.auth.signOut();
+    recoveryPanel.hidden = true; loginForm.hidden = false; loginForm.reset();
+    message.textContent = 'पासवर्ड सफलतापूर्वक बदल गया। अब नए पासवर्ड से लॉगिन करें और अपना OTP डालें।';
+    showMessage(message.textContent);
+  } catch (_) { message.textContent = 'पासवर्ड अपडेट नहीं हुआ। ईमेल का नया रीसेट लिंक मँगाएँ और फिर प्रयास करें।'; }
+  finally { button.disabled = false; }
 }
 async function signOut() { await client.auth.signOut(); showSignedOut(); }
 function showSignedOut() {
+  if (recoveryPanel) recoveryPanel.hidden = true;
   sessionUser=null; profile=null; articles=[];
   if (appView) appView.hidden=true;
   if (loginView) loginView.hidden=false;
