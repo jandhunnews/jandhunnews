@@ -1,7 +1,7 @@
 const CONFIG = window.JANDHUN_SUPABASE || {};
 const publicKey = typeof CONFIG.anonKey === 'string' ? CONFIG.anonKey.trim() : '';
 const isPublicSupabaseKey = publicKey.startsWith('sb_publishable_')
-  || /^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$/.test(publicKey);
+  || /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(publicKey);
 const isConfigured = typeof window.supabase !== 'undefined'
   && /^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(CONFIG.url || '')
   && isPublicSupabaseKey;
