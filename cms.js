@@ -20,11 +20,6 @@ let mfaFactorId = null;
 let mfaChallengeId = null;
 
 const roleLabels = { super_admin:'सुपर एडमिन', chief_editor:'मुख्य संपादक', news_editor:'समाचार संपादक', reporter:'न्यूज़ रिपोर्टर', writer:'लेखक', guest:'योगदानकर्ता / अतिथि', subscriber:'सब्सक्राइबर / पाठक' };
-const roleDescriptions = {
-  super_admin:'सभी लेखों और न्यूज़रूम सेटिंग पर पूरा नियंत्रण।', chief_editor:'सभी लेखों की समीक्षा, संपादन, अस्वीकृति और प्रकाशन।',
-  news_editor:'संपादकीय समीक्षा और खबरों का प्रकाशन।', reporter:'अपने लेख बनाएं और समीक्षा के लिए भेजें; सीधे प्रकाशित नहीं कर सकते।',
-  writer:'अपने ड्राफ़्ट बनाएं और समीक्षा के लिए भेजें; सीधे प्रकाशित नहीं कर सकते।', guest:'सीमित ड्राफ़्ट बना और सुरक्षित कर सकते हैं।', subscriber:'पाठक खाता; CMS में लेख बनाने की अनुमति नहीं।'
-};
 const editorRoles = ['super_admin','chief_editor','news_editor'];
 const authorRoles = ['reporter','writer','guest'];
 
@@ -193,7 +188,6 @@ async function loadAccount(user) {
   if (error || !data) { await client.auth.signOut(); showMessage('आपकी न्यूज़रूम प्रोफ़ाइल नहीं मिली। एडमिन से खाता सक्रिय करवाएं।',true); return; }
   profile=data; loginView.hidden=true; appView.hidden=false;
   document.getElementById('userSummary').textContent=`${roleLabels[profile.role]||'उपयोगकर्ता'} · ${profile.email||user.email}`;
-  document.getElementById('permissionSummary').textContent=roleDescriptions[profile.role]||'कोई भूमिका निर्धारित नहीं है।';
   const canCreate=authorRoles.includes(profile.role)||editorRoles.includes(profile.role);
   document.getElementById('editorPanel').hidden=!canCreate;
   document.getElementById('formHint').textContent=profile.role==='guest'?'योगदानकर्ता केवल ड्राफ़्ट सुरक्षित कर सकते हैं।':'आपके अधिकार सर्वर पर लागू हैं; भूमिका के बाहर की कार्रवाई अस्वीकार होगी।';
