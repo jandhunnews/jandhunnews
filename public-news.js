@@ -1,11 +1,9 @@
 (function () {
   const config = window.JANDHUN_SUPABASE || {};
   const key = typeof config.anonKey === 'string' ? config.anonKey.trim() : '';
-  const validKey = key.startsWith('sb_publishable_')
-    || /^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$/.test(key);
-  const configured = window.supabase
-    && /^https:\\/\\/[a-z0-9-]+\\.supabase\\.co$/i.test(config.url || '')
-    && validKey;
+  const validKey = key.startsWith('sb_publishable_') || key.split('.').length === 3;
+  const projectUrl = typeof config.url === 'string' ? config.url.trim() : '';
+  const configured = Boolean(window.supabase && projectUrl.startsWith('https://') && projectUrl.endsWith('.supabase.co') && validKey);
   const grid = document.querySelector('.news-grid');
   if (!grid) return;
   const make = (tag, className, value) => {
@@ -20,13 +18,13 @@
     showMessage('खबरें अभी उपलब्ध नहीं हैं। न्यूज़रूम डेटाबेस कॉन्फ़िगरेशन जाँचें।');
     return;
   }
-  const client = window.supabase.createClient(config.url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  const client = window.supabase.createClient(projectUrl, key, { auth: { persistSession: false, autoRefreshToken: false } });
   function renderArticle(article, index) {
     const card = make('a', 'story-card' + (index === 0 ? ' large-story' : ''));
     card.href = 'article.html?id=' + encodeURIComponent(article.id);
     const media = make('div', 'story-image');
     media.setAttribute('aria-hidden', 'true');
-    if (article.image_url && /^https:\\/\\//i.test(article.image_url)) {
+    if (typeof article.image_url === 'string' && article.image_url.startsWith('https://')) {
       const image = make('img');
       image.src = article.image_url;
       image.alt = '';
