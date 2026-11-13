@@ -1,12 +1,3 @@
-// JanDhun News: route all homepage login entry points to the real Supabase CMS.
-const newsroomLink = document.createElement('a');
-newsroomLink.href = 'cms.html';
-newsroomLink.className = 'newsroom-link';
-newsroomLink.textContent = 'न्यूज़रूम';
-newsroomLink.setAttribute('aria-label', 'वास्तविक न्यूज़रूम सीएमएस खोलें');
-const topActions = document.querySelector('.top-actions');
-if (topActions) topActions.prepend(newsroomLink);
-
 document.querySelectorAll('[data-open-login]').forEach((button) => {
   button.addEventListener('click', () => { window.location.href = 'cms.html'; });
 });
