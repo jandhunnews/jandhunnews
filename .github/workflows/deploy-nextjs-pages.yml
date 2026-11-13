@@ -36,12 +36,17 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Read existing public Supabase configuration
+        run: |
+          URL=$(sed -nE "s/.*url: '([^']+)'.*/\\1/p" ../supabase-config.js | head -n1)
+          KEY=$(sed -nE "s/.*anonKey: '([^']+)'.*/\\1/p" ../supabase-config.js | head -n1)
+          test -n "$URL" && test -n "$KEY"
+          echo "NEXT_PUBLIC_SUPABASE_URL=$URL" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$KEY" >> "$GITHUB_ENV"
       - name: Build static export
         run: npm run build
         env:
           GITHUB_PAGES: "true"
-          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
