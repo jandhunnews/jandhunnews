@@ -1,5 +1,5 @@
-const CACHE_NAME = 'jan-dhun-news-v2';
-const APP_SHELL = ['./', './index.html', './styles.css', './branding.css', './script.js', './manifest.webmanifest', './logo.svg', './cms.html', './cms.css', './cms.js'];
+const CACHE_NAME = 'jan-dhun-news-v3';
+const APP_SHELL = ['./', './index.html', './styles.css', './branding.css', './pages.css', './script.js', './public-news.js', './pages.js', './manifest.webmanifest', './logo.svg', './cms.html', './cms.css', './cms.js', './category.html', './article.html', './search.html', './about.html', './contact.html', './advertise.html', './join.html', './epaper.html', './privacy.html', './terms.html'];
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
   self.skipWaiting();
