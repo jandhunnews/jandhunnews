@@ -24,13 +24,10 @@ npm run dev
 
 ## GitHub Pages deployment
 
-1. In repository Settings → Secrets and variables → Actions → Variables, add:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-2. In repository Settings → Pages, set Build and deployment source to **GitHub Actions**.
-3. Merge this upgrade branch into `main`. The workflow builds `next-site/out` and deploys it to GitHub Pages.
+1. In repository Settings → Pages, set Build and deployment source to **GitHub Actions**.
+2. Merge this upgrade branch into `main`. The workflow reads the already-public browser-safe Supabase URL and publishable key from the existing root-level `supabase-config.js`, builds `next-site/out`, and deploys it to GitHub Pages.
 
-The workflow deliberately uses repository Actions **Variables** for public Supabase configuration. A publishable/anon key is intended for browser use; never put a Supabase service-role key or database password in frontend code or Actions variables.
+The publishable/anon key is intended for browser use. Never put a Supabase service-role key or database password in frontend code.
 
 ## Supabase data
 
