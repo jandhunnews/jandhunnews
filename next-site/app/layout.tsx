@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,15 +19,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="hi">
       <body>
         <header className="site-header">
-          <a className="brand" href="/">जनधुन<span> न्यूज़</span></a>
+          <Link className="brand" href="/">जनधुन<span> न्यूज़</span></Link>
           <nav aria-label="मुख्य नेविगेशन">
-            <a href="/">होम</a><a href="/#latest">ताज़ा खबरें</a><a href="/#about">हमारे बारे में</a>
-            <a className="nav-cta" href="/newsroom/">न्यूज़रूम</a>
+            <Link href="/">होम</Link><Link href="/#latest">ताज़ा खबरें</Link><Link href="/#about">हमारे बारे में</Link>
+            <Link className="nav-cta" href="/newsroom/">न्यूज़रूम</Link>
           </nav>
         </header>
         {children}
         <footer className="site-footer">
-          <div><a className="brand footer-brand" href="/">जनधुन<span> न्यूज़</span></a><p>सच की आवाज़, सबके लिए।</p></div>
+          <div><Link className="brand footer-brand" href="/">जनधुन<span> न्यूज़</span></Link><p>सच की आवाज़, सबके लिए।</p></div>
           <p>© {new Date().getFullYear()} जनधुन न्यूज़ · सभी अधिकार सुरक्षित</p>
         </footer>
       </body>
