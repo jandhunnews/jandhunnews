@@ -1,6 +1,10 @@
 name: Deploy Next.js static site to GitHub Pages
 
 on:
+  pull_request:
+    paths:
+      - "next-site/**"
+      - ".github/workflows/deploy-nextjs-pages.yml"
   push:
     branches: [main]
     paths:
@@ -44,6 +48,7 @@ jobs:
           path: next-site/out
 
   deploy:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
